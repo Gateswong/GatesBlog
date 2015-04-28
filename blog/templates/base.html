@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block navbar %}
+{{ super() }}
 <div class="navbar navbar-default" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -26,12 +27,22 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{ url_for("control_panel.login") }}">Login</li>
+        {% if current_user.is_authenticated() %}
+        <li><a href="#">{{ current_user.get_id() }}</a></li>
+        <li><a href="{{ url_for("control_panel.logout") }}">Logout</a></li>
+        {% else %}
+        <li><a href="{{ url_for("control_panel.login") }}">Login</a></li>
+        {% endif %}
+
       </ul>
+
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block content %}
+<div class="container">
+  {% block page_content %}{% endblock %}
+</div>
 {% endblock %}

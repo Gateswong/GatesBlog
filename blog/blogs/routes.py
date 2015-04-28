@@ -4,11 +4,9 @@ from flask import (render_template,
                    )
 
 from . import blogs
-from .utils import load_page_meta
-from ..control_panel.utils import NotSetup
-from ..models import (Setting,
-                      SETTING_BLOG_NAME
-                      )
+from ..utils import (load_page_meta,
+                     NotSetup
+                     )
 
 
 @blogs.route("/")
@@ -19,3 +17,4 @@ def home():
         return redirect(url_for("control_panel.setup"))
     return render_template("blogs/index.html",
                            page_meta=page_meta)
+

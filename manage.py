@@ -27,6 +27,27 @@ def recreate_database():
     db.create_all()
 
 
+@manager.command
+def adduser(email, username):
+    """Regist a new user"""
+    from getpass import getpass
+    password = getpass()
+    password2 = getpass()
+    if password != password2:
+        import sys
+        sys.exit("Create user failed: passwords do not match!")
+
+    from blog import db
+    from blog.models.user import User
+
+    db.create_all()
+    user = User(email=email, username=username, password=password, name=username)
+    db.session.add(user)
+    db.session.commit()
+
+    print("Create user success: {0}".format(username))
+
+
 if __name__ == "__main__":
     manager.run()
 
