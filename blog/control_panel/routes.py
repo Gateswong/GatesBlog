@@ -23,6 +23,17 @@ from .forms import (SetupForm,
                     )
 
 
+@control_panel.route("/cpanel")
+@login_required
+def index():
+    if need_setup():
+        flash("You need setup the blog first!")
+        return redirect(url_for("control_panel.setup"))
+
+    page_meta = load_page_meta(title_prefix="Control Panel")
+    return render_template("control_panel/index.html", page_meta=page_meta)
+
+
 @control_panel.route("/setup", methods=["GET", "POST"])
 def setup():
     if not need_setup():
