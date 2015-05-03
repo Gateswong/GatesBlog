@@ -29,6 +29,7 @@
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated() %}
         <li><a href="#">{{ current_user.get_id() }}</a></li>
+        <li><a href="{{ url_for("control_panel.index") }}">Control Panel</a></li>
         <li><a href="{{ url_for("control_panel.logout") }}">Logout</a></li>
         {% else %}
         <li><a href="{{ url_for("control_panel.login") }}">Login</a></li>

@@ -1,4 +1,7 @@
+from flask import redirect, url_for
 from sqlalchemy.orm.exc import NoResultFound
+
+from functools import wraps
 
 from . import db
 from .models import (Setting,
@@ -31,4 +34,22 @@ def need_setup():
         return False
     except NoResultFound:
         return True
+
+
+def setup_required(func):
+    """
+    If you decorate a view with this, it will ensure that the blog is setup
+    before calling the view.
+
+    Similar to the login_required in flask-Login
+    """
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if need_setup():
+            return redirect(url_for("control_panel.setup"))
+        return func(*args, **kwargs)
+    return decorated_view
+
+
+
 

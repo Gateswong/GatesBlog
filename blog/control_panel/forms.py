@@ -2,7 +2,8 @@ from flask.ext.wtf import Form
 from wtforms import (StringField,
                      PasswordField,
                      BooleanField,
-                     SubmitField
+                     SubmitField,
+                     TextAreaField
                      )
 from wtforms.validators import (Required,
                                 Length,
@@ -20,4 +21,13 @@ class LoginForm(Form):
     password = PasswordField("Password", validators=[Required()])
     remember_me = BooleanField("Keep me logged in")
     submit = SubmitField("Login")
+
+
+class NewPostForm(Form):
+    title = StringField("Title", validators=[Required()])
+    body = TextAreaField("Body")
+    draft = SubmitField("Save as Draft")
+    post = SubmitField("Post")
+
+
 

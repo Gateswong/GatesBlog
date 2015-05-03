@@ -14,24 +14,38 @@ from ..models import (Setting,
                       SETTING_BLOG_NAME
                       )
 from ..utils import (load_page_meta,
+                     setup_required,
                      need_setup
                      )
 
 from . import control_panel
 from .forms import (SetupForm,
-                    LoginForm
+                    LoginForm,
+                    NewPostForm
                     )
 
 
 @control_panel.route("/cpanel")
 @login_required
+@setup_required
 def index():
-    if need_setup():
-        flash("You need setup the blog first!")
-        return redirect(url_for("control_panel.setup"))
-
     page_meta = load_page_meta(title_prefix="Control Panel")
-    return render_template("control_panel/index.html", page_meta=page_meta)
+    return render_template("control_panel/index.html",
+                           page_meta=page_meta)
+
+
+@control_panel.route("/newpost", methods=["GET", "POST"])
+@login_required
+@setup_required
+def new_post():
+    page_meta = load_page_meta(title_prefix="New post")
+    form = NewPostForm()
+    if form.validate_on_submit():
+        raise
+        return "Not implemented"
+    return render_template("control_panel/new_post.html",
+                           page_meta=page_meta,
+                           form=form)
 
 
 @control_panel.route("/setup", methods=["GET", "POST"])
@@ -49,6 +63,7 @@ def setup():
 
 
 @control_panel.route("/setup/success", methods=["GET"])
+@setup_required
 def setup_success():
     return render_template("control_panel/message_page.html",
                            message="Now the blog is setup!",
@@ -57,6 +72,7 @@ def setup_success():
 
 
 @control_panel.route("/login", methods=["GET", "POST"])
+@setup_required
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -74,6 +90,7 @@ def login():
 
 @control_panel.route("/logout", methods=["GET", "POST"])
 @login_required
+@setup_required
 def logout():
     logout_user()
     flash("You have been logged out")
