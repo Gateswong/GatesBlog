@@ -5,6 +5,10 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
     BLOG_NAME = u"Your Blog Name"
+    NAV_ITEMS = [
+        {"name": "Github", "link": "http://github.com/Gateswong", "new_window": True},
+        {"name": "Bitbucket", "link": "http://bitbucket.org/Gatesice"},
+    ]
 
 
 class ProductionConfig(Config):
