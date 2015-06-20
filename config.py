@@ -4,6 +4,8 @@ import os
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY")
 
+    BLOG_NAME = u"Your Blog Name"
+
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get("BLOG_DATABASE_URL") or \
@@ -20,6 +22,8 @@ class DevelopmentConfig(Config):
     WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or \
         "csrf_s3cr3t"
 
+    SUB_MARK = "dev"
+
 
 class TestingConfig(Config):
     TESTING = True
@@ -28,6 +32,8 @@ class TestingConfig(Config):
         "postgresql://localhost/blog_test"
     WTF_CSRF_SECRET_KEY = os.environ.get("WTF_CSRF_SECRET_KEY") or \
         "csrf_s3cr3t"
+
+    SUB_MARK = "test"
 
 
 config = {
