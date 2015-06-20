@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}{{ page_meta["Title"] }}{% endblock %}
+{% block title %}{{ config["BLOG_NAME"] }}{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -12,29 +12,25 @@
 <div class="navbar navbar-default" role="navigation">
   <div class="container">
     <div class="navbar-header">
+      {# A button for small devices #}
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ url_for("blogs.home") }}">{{ page_meta["Brand"] }}</a>
+      {# Brand Mark #}
+      <a class="navbar-brand" href="{{ url_for("blogs.home") }}">{{ config["BLOG_NAME"] }}</a>
     </div>
 
+    {# Navbar contents #}
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="{{ url_for("blogs.home") }}">Home</a></li>
-      </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        {% if current_user.is_authenticated() %}
-        <li><a href="#">{{ current_user.get_id() }}</a></li>
-        <li><a href="{{ url_for("control_panel.index") }}">Control Panel</a></li>
-        <li><a href="{{ url_for("control_panel.logout") }}">Logout</a></li>
-        {% else %}
-        <li><a href="{{ url_for("control_panel.login") }}">Login</a></li>
-        {% endif %}
-
+        <li><a href="/">Blog</a></li>
+        {% for nav_item in config["NAV_ITEMS"] %}
+        <li><a href="{{ nav_item["link"] }}" {%- if nav_item.get("new_window", False) -%}target="_blank"{%- endif -%} >{{ nav_item["name"] }}</a></li>
+        {% endfor %}
       </ul>
 
     </div>
