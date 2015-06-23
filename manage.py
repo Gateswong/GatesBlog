@@ -23,6 +23,8 @@ def recreate_database():
     from blog import db
     from blog import models
 
+    db.reflect()  # hacky solution
+                  # ref: http://jrheard.tumblr.com/post/12759432733/dropping-all-tables-on-postgres-using
     db.drop_all()
     db.create_all()
 
