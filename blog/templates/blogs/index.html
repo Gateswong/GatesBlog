@@ -1,2 +1,54 @@
 {% extends "base.html" %}
 
+{% block page_content %}
+<div class="row">
+  <div class="container">
+    <ul class="post-list">
+      <li class="post-list-item">
+        <div class="row">
+          <div class="container">
+            <strong>Blog Posts</strong>
+        </div>
+      </li>
+      
+      
+    {% for post in posts %}
+      <li class="post-list-item"><a href="{{ url_for("blogs.post", post_id=post.id) }}">{{ post.title }}</a></li>
+    {% endfor %}
+    
+    {# Pagination #}
+      <li class="post-list-item">
+          <nav>
+            <ul class="pagination pagination-sm">
+              <li {% if page_num == 1 or page_total == 0 %} class="disabled" {% endif %}>
+                <a href={% if page_num == 1 or page_total == 0 %}"#"{% else %}"{{ url_for("blog.list_posts", page=page_num - 1) }}"{% endif %} aria-label="Previous" ><span aria-hidden="true">&lt;</span></a>
+              </li>
+              {% if page_total <= 10 %}
+                {% for pg in range(page_total) %}
+                <li {% if pg + 1 == page_num %} class="active" {%- endif -%}>
+                  <a href={%- if pg + 1 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg + 1) }}"{% endif %} >{{ pg + 1 }} {% if pg + 1 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                {% endfor %}
+              {% elif page_num < 5 %}
+                {% for pg in range(10) %}
+                <li {% if pg + 1 == page_num %} class="active" {%- endif -%}>
+                  <a href={%- if pg + 1 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg + 1) }}"{% endif %} >{{ pg + 1 }} {% if pg + 1 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                {% endfor %}
+              {% else %}
+                {% for pg in range(10) %}
+                <li {% if pg - 4 == page_num %} class="active" {%- endif -%}>
+                  <a href={%- if pg - 4 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg - 4) }}"{% endif %} >{{ pg + 1 }} {% if pg - 4 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
+                </li>
+                {% endfor %}
+              {% endif %}
+              <li {% if page_num == page_total or page_total == 0 %} class="disabled" {%- endif -%}>
+                <a href={% if page_num == page_total or page_total == 0 %}"#"{% else %}"{{ url_for("blog.list_posts", page=page_num + 11) }} }}"{% endif %} aria-label="Next"><span aria-hidden="true">></span></a>
+              </li>
+            </ul>
+          </nav>
+        </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

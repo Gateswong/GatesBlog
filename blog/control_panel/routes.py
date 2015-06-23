@@ -9,14 +9,9 @@ from flask.ext.login import (login_user,
                              login_required
                              )
 
-from ..models import (Setting,
-                      User,
-                      SETTING_BLOG_NAME
+from ..models import (User,
+                      Post,
                       )
-from ..utils import (load_page_meta,
-                     setup_required,
-                     need_setup
-                     )
 
 from . import control_panel
 from .forms import (SetupForm,
@@ -27,52 +22,34 @@ from .forms import (SetupForm,
 
 @control_panel.route("/cpanel")
 @login_required
-@setup_required
 def index():
-    page_meta = load_page_meta(title_prefix="Control Panel")
+    posts = Post.query_page_of_posts()
     return render_template("control_panel/index.html",
-                           page_meta=page_meta)
+                           posts=posts,
+                           page_num=1,
+                           page_total=Post.total_pages(),
+                           )
 
 
-@control_panel.route("/newpost", methods=["GET", "POST"])
+@control_panel.route("/cpanel/newpost", methods=["GET", "POST"])
 @login_required
-@setup_required
 def new_post():
-    page_meta = load_page_meta(title_prefix="New post")
     form = NewPostForm()
     if form.validate_on_submit():
-        raise
-        return "Not implemented"
+        title = form.title.data
+        content = form.body.data
+        Post.new_post(title=title, content=content)
+        return redirect(url_for("control_panel.index"))
     return render_template("control_panel/new_post.html",
-                           page_meta=page_meta,
                            form=form)
 
-
-@control_panel.route("/setup", methods=["GET", "POST"])
-def setup():
-    if not need_setup():
-        return render_template("control_panel/message_page.html",
-                               message="You site is already setup, you don't need to do it again.",
-                               title="Site already setup",
-                               next_url=url_for("blogs.home"))
-    form = SetupForm()
-    if form.validate_on_submit():
-        if Setting.apply_setting(SETTING_BLOG_NAME, form.blog_name.data):
-            return redirect(url_for("control_panel.setup_success"))
-    return render_template("control_panel/setup.html", form=form)
-
-
-@control_panel.route("/setup/success", methods=["GET"])
-@setup_required
-def setup_success():
-    return render_template("control_panel/message_page.html",
-                           message="Now the blog is setup!",
-                           title="Setup complete!",
-                           next_url=url_for("blogs.home"))
+@control_panel.route("/cpanel/editpost", methods=["GET", "POST"])
+@login_required
+def edit_post():
+    return "Not implemented"
 
 
 @control_panel.route("/login", methods=["GET", "POST"])
-@setup_required
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -82,16 +59,15 @@ def login():
             return redirect(url_for(".login"))
         login_user(user, form.remember_me.data)
         return redirect(request.args.get("next") or url_for("blogs.home"))
-    page_meta = load_page_meta(title_prefix="Login")
     return render_template("control_panel/login.html",
-                           form=form,
-                           page_meta=page_meta)
+                           form=form
+                           )
 
 
 @control_panel.route("/logout", methods=["GET", "POST"])
 @login_required
-@setup_required
 def logout():
     logout_user()
     flash("You have been logged out")
     return redirect(request.args.get("next") or url_for("blogs.home"))
+

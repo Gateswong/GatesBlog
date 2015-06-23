@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+<div class="row">
+  <div class="container text-center">
+    <h2>{{ post.title }}</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="container">
+  {% if "raw" in request.args and request.args["raw"] == "1" %}
+    <p class="text-sm"><span class="glyphicon glyphicon-alert"></span> Raw Mode.
+      To see normal mode, click <a href={{ url_for("blogs.post", post_id=post.id) }}>here</a>.
+    </p>
+    <pre>{{ post_body }}</pre>
+  {% else %}
+  {{ post_body|safe }}
+  {% endif %}
+  </div>
+</div>
+{% endblock %}
