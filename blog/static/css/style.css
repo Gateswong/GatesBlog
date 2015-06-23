@@ -1,0 +1,15 @@
+ul.post-list {
+  list-style: none;
+  font-size: 130%;
+  font-weight: 200;
+  padding: 0;
+}
+
+.post-list-item {
+  border-top: 1px dashed #ccc;
+  padding: 0.4em 0.24em;
+}
+
+ul.post-list > :first-child {
+  border-top: None
+}
