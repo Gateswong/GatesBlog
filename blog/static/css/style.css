@@ -13,3 +13,27 @@ ul.post-list {
 ul.post-list > :first-child {
   border-top: None
 }
+
+#blog-body {
+  font-size: 110%;
+}
+
+#blog-body h1 {
+  font-size: 150%;
+}
+
+#blog-body h2 {
+  font-size: 135%;
+}
+
+#blog-body h3 {
+  font-size: 120%;
+}
+
+#blog-body h4 {
+  font-size: 110%;
+}
+
+#blog-body h5 {
+  font-size: 105%;
+}

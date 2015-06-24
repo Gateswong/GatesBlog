@@ -10,8 +10,11 @@ from sqlalchemy.orm.exc import (
 from . import blogs
 from ..models.post import Post
 from ..utils import (load_page_meta,
-                     NotSetup
+                     NotSetup,
                      )
+from ..post_body_parser import (
+    parse,
+)
 
 
 @blogs.route("/")
@@ -61,10 +64,8 @@ def post(post_id):
     except NoResultFound:
         return "Not Found", 404
 
-    if is_raw:
-        post_body = post.content
-    else:
-        post_body = post.content
+    if not is_raw:
+        post_body = parse(post.content)
 
     return render_template("blogs/post.html",
                            post=post,
