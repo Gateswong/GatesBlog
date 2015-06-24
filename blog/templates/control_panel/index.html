@@ -27,37 +27,36 @@
     {% endfor %}
       
       
-      {# Pagination #}
+    {% set service_name = "blogs.post_list" %}
       <li class="post-list-item">
-          <nav>
-            <ul class="pagination pagination-sm">
-              <li {% if page_num == 1 or page_total == 0 %} class="disabled" {% endif %}>
-                <a href={% if page_num == 1 or page_total == 0 %}"#"{% else %}"{{ url_for("blog.list_posts", page=page_num - 1) }}"{% endif %} aria-label="Previous" ><span aria-hidden="true">&lt;</span></a>
-              </li>
-              {% if page_total <= 10 %}
-                {% for pg in range(page_total) %}
-                <li {% if pg + 1 == page_num %} class="active" {%- endif -%}>
-                  <a href={%- if pg + 1 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg + 1) }}"{% endif %} >{{ pg + 1 }} {% if pg + 1 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
-                </li>
-                {% endfor %}
-              {% elif page_num < 5 %}
-                {% for pg in range(10) %}
-                <li {% if pg + 1 == page_num %} class="active" {%- endif -%}>
-                  <a href={%- if pg + 1 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg + 1) }}"{% endif %} >{{ pg + 1 }} {% if pg + 1 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
-                </li>
-                {% endfor %}
-              {% else %}
-                {% for pg in range(10) %}
-                <li {% if pg - 4 == page_num %} class="active" {%- endif -%}>
-                  <a href={%- if pg - 4 == page_num -%}"#"{% else %}"{{ url_for("blog.list_posts", page=pg - 4) }}"{% endif %} >{{ pg + 1 }} {% if pg - 4 == page_num %}<span class="sr-only">(current)</span>{% endif %}</a>
-                </li>
-                {% endfor %}
-              {% endif %}
-              <li {% if page_num == page_total or page_total == 0 %} class="disabled" {%- endif -%}>
-                <a href={% if page_num == page_total or page_total == 0 %}"#"{% else %}"{{ url_for("blog.list_posts", page=page_num + 11) }} }}"{% endif %} aria-label="Next"><span aria-hidden="true">></span></a>
-              </li>
-            </ul>
-          </nav>
+        <nav>
+          <ul class="pagination pagination-sm">
+
+            {% call pagination_post_list_side_item(page_num == 1 or page_total == 0, service_name, page_num - 1, "Previous", "<") %}
+            {% endcall %}
+
+            {% if page_total <= 10 %}
+              {% for pg in range(page_total) %}
+                {% call pagination_post_list_item(page_num, service_name, pg + 1) %}
+                {% endcall %}
+              {% endfor %}
+            {% elif page_num < 5 %}
+              {% for pg in range(10) %}
+                {% call pagination_post_list_item(page_num, service_name, pg + 1) %}
+                {% endcall %}
+              {% endfor %}
+            {% else %}
+              {% for pg in range(page_total) %}
+                {% call pagination_post_list_item(page_num, service_name, pg - 4) %}
+                {% endcall %}
+              {% endfor %}
+            {% endif %}
+
+            {% call pagination_post_list_side_item(page_num == page_total or page_total == 0, service_name, page_num + 1, "Next", ">") %}
+            {% endcall %}
+
+          </ul>
+        </nav>
       </li>
     </ul>
   </div>

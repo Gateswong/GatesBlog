@@ -31,6 +31,31 @@ def index():
                            )
 
 
+@control_panel.route("/cpanel/posts")
+@login_required
+def post_list():
+    # Get Page Num from query string
+    try:
+        page_num = int(request.args.get("page", 1))
+    except ValueError:
+        page_num = 1
+
+    # Get tags and category filter
+    tags = request.args.get("tags", None)
+    if tags: tags = tags.split(",")
+    category = request.args.get("category", "")
+
+    posts = Post.query_page_of_posts(skip=(page_num - 1) * 25,
+                                     limit=25,
+                                     tags=tags,
+                                     category=category)
+
+    return render_template("control_panel/index.html",
+                           posts=posts,
+                           page_num=page_num,
+                           page_total=Post.total_pages())
+
+
 @control_panel.route("/cpanel/newpost", methods=["GET", "POST"])
 @login_required
 def new_post():

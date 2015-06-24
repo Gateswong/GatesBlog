@@ -6,6 +6,8 @@
 {{ super() }}
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="css/style.css") }}" >
+<script src="{{ url_for("static", filename="js/blog.js") }}"></script>
+
 {% endblock %}
 
 {% block navbar %}
@@ -44,3 +46,47 @@
   {% block page_content %}{% endblock %}
 </div>
 {% endblock %}
+
+{% macro pagination_post_list_item(page_num, service_name, item_page_num) -%}
+<li {% if page_num == item_page_num %}
+    class="disabled"
+    {% endif %} >
+    
+  <a href="
+    {%- if page_num == item_page_num -%}
+    #
+    {%- else -%}
+    {{ url_for(service_name, page=item_page_num) }}
+    {%- endif -%}
+    " >{{ item_page_num }}
+    
+    {%- if item_page_num == page_num -%}
+    <span class="sr-only">(current)</span>
+    {%- endif -%}
+    
+  </a>
+  
+</li>
+{{ caller() }}
+{% endmacro %}
+
+{% macro pagination_post_list_side_item(is_disabled, service_name, item_page_num, item_aria_label, item_text) -%}
+<li {% if is_disabled %}
+    class="disabled"
+    {% endif %} >
+    
+  <a href="
+    {%- if is_disabled -%}
+    #
+    {%- else -%}
+    {{ url_for(service_name, page=item_page_num) }}
+    {%- endif -%}
+    " {{ item_aria_label }} >
+      
+      <span aria-hidden="true">{{ item_text }}</span>
+    
+  </a>
+  
+</li>
+{{ caller() }}
+{% endmacro %}
